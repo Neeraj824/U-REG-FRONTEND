@@ -1,25 +1,60 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { format } from 'date-fns';
 
-function App() {
+const App = () => {
+  const [historicalRates, setHistoricalRates] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchHistoricalRates(selectedDate);
+  }, [selectedDate]);
+
+  const fetchHistoricalRates = async (date) => {
+    try {
+      setLoading();
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      const response = await axios.get(`http://localhost:3001/api/rates/v1/${formattedDate}`);
+      setHistoricalRates(response.data);
+    } catch (error) {
+      console.error('Error fetching historical rates:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main-container">
+      <div className="content-container">
+        <h1 className="center-align">Yet Another Forex</h1>
+        <div className="date-container">
+          <div>Rates as of {format(selectedDate, 'dd-MM-yyyy')}</div>
+          <div>
+            <input type="date" value={format(selectedDate, 'yyyy-MM-dd')} onChange={(e) => handleDateChange(new Date(e.target.value))} />
+          </div>
+        </div>
+        {loading ? (
+          <p>Loading..</p>
+        ) : historicalRates.length > 0 ? (
+          <div className="currency-box-container">
+            {historicalRates.map((rate, index) => (
+              <div className="currency-box" key={index}>
+                <div className="currency-name">{rate.code}</div>
+                <div className="currency-rate">{rate.rate}</div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No historical rates available for the selected date.</p>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
