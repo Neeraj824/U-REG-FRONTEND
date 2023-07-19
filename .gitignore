@@ -8,29 +8,8 @@ node_modules/
 # Build output
 build/
 dist/
-
-# Dependency lock files
-yarn.lock
-package-lock.json
-npm-shrinkwrap.json
-
-# Environment variables
+.DS_Store
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Editor and IDE files
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# Compiled output of webpack
-*.js.map
-*.css.map
-*.css
 
 # Cached files
 .cache/

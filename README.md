@@ -4,7 +4,7 @@ git clone -b main https://github.com/Neeraj824/U-REG-FRONTEND.git
 
 Navigate to the project directory:
 
-cd frontend
+cd ~project_path
 
 Install the dependencies using npm or Yarn:
 

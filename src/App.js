@@ -15,7 +15,8 @@ const App = () => {
     try {
       setLoading();
       const formattedDate = format(date, 'yyyy-MM-dd');
-      const response = await axios.get(`http://localhost:3001/api/rates/v1/${formattedDate}`);
+      const apiUrl = `${process.env.REACT_APP_API_URL}/${formattedDate}`;
+      const response = await axios.get(apiUrl);
       setHistoricalRates(response.data);
     } catch (error) {
       console.error('Error fetching historical rates:', error);
