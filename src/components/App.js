@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { format } from 'date-fns';
+import CurrencyBox from './CurrencyBox';
+import '../styles/main.css';
+import { fetchHistoricalRates } from '../utils/api';
 
 const App = () => {
   const [historicalRates, setHistoricalRates] = useState([]);
@@ -8,15 +10,13 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchHistoricalRates(selectedDate);
+    fetchHistoricalData(selectedDate);
   }, [selectedDate]);
 
-  const fetchHistoricalRates = async (date) => {
+  const fetchHistoricalData = async (date) => {
     try {
-      setLoading();
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      const apiUrl = `${process.env.REACT_APP_API_URL}/${formattedDate}`;
-      const response = await axios.get(apiUrl);
+      setLoading(true);
+      const response = await fetchHistoricalRates(date);
       setHistoricalRates(response.data);
     } catch (error) {
       console.error('Error fetching historical rates:', error);
@@ -36,7 +36,11 @@ const App = () => {
         <div className="date-container">
           <div>Rates as of {format(selectedDate, 'dd-MM-yyyy')}</div>
           <div>
-            <input type="date" value={format(selectedDate, 'yyyy-MM-dd')} onChange={(e) => handleDateChange(new Date(e.target.value))} />
+            <input 
+              type="date" 
+              value={format(selectedDate, 'yyyy-MM-dd')} 
+              onChange={(e) => handleDateChange(new Date(e.target.value))} 
+            />
           </div>
         </div>
         {loading ? (
@@ -44,10 +48,7 @@ const App = () => {
         ) : historicalRates.length > 0 ? (
           <div className="currency-box-container">
             {historicalRates.map((rate, index) => (
-              <div className="currency-box" key={index}>
-                <div className="currency-name">{rate.code}</div>
-                <div className="currency-rate">{rate.rate}</div>
-              </div>
+              <CurrencyBox key={index} code={rate.code} rate={rate.rate} />
             ))}
           </div>
         ) : (
