@@ -8,8 +8,11 @@ node_modules/
 # Build output
 build/
 dist/
-.DS_Store
+
 .env
+
+.DS_Store
+
 
 # Cached files
 .cache/
